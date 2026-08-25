@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta Ant Design"
+  short_description: "突出重点、克制清晰的 Ant Design 企业后台设计"
+  default_prompt: "使用 $meta-ant-design 重新设计这个 Ant Design Pro 页面，让重点一眼可见且保持企业后台克制。"
