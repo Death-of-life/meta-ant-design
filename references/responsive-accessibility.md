@@ -229,4 +229,3 @@ Also verify:
 - reduced motion;
 - screen-reader names for icon actions and statuses;
 - no console errors or layout warnings.
-

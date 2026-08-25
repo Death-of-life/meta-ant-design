@@ -103,4 +103,3 @@ VERIFY     exact width, state, interaction, or test
 ```
 
 Never write “looks bland” as a finding. Identify the equal weights, absent anchor, misleading color, repeated container, or broken scan order that creates the effect.
-

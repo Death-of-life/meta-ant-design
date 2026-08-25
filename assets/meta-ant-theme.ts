@@ -40,4 +40,3 @@ export const metaAntTheme: ThemeConfig = {
 };
 
 export default metaAntTheme;
-

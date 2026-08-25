@@ -163,4 +163,3 @@ Use motion to explain state change, not to decorate:
 - no looping decorative animation in operational pages;
 - do not animate frequently updating metrics by default;
 - respect `prefers-reduced-motion` and keep all operations usable with animation disabled.
-

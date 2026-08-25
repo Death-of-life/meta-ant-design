@@ -289,4 +289,3 @@ Rules:
 - Keep the form itself as the focus. Do not add a second progress dashboard above it.
 - Save draft must not pretend that full validation or activation occurred.
 - Keep confirmation controls visible inside the viewport on every supported screen.
-

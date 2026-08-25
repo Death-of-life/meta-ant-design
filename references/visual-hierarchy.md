@@ -213,4 +213,3 @@ Show the first viewport briefly. A reviewer should answer:
 ### Deletion test
 
 For every card, border, chip, icon, or chart ask: if removed, does comprehension or action degrade? If not, remove it.
-

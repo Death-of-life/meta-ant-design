@@ -190,4 +190,3 @@ Use Ant components rather than custom gray placeholders:
 | success terminal | `Result` with the next logical action, not confetti |
 
 An empty state must say what is empty, why that may be expected, and the next useful action. An error state must not erase still-valid data unless continuing would be unsafe.
-
