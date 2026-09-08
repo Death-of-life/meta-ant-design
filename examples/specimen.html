@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN" data-ops-theme="light" data-ops-density="comfortable">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ops Pilot · Graphite & Iris — Design Token</title>
+  <link rel="stylesheet" href="../assets/meta-ant.css">
+  <link rel="stylesheet" href="specimen.css">
+</head>
+<body class="ops-root specimen">
+  <aside class="specimen-nav" aria-label="样张导航">
+    <a class="specimen-brand" href="#intro">Ops Pilot<span>Design system · 02</span></a>
+    <nav>
+      <a href="#tokens">设计令牌</a>
+      <a href="#task">任务与状态</a>
+      <a href="#facts">只读属性</a>
+    </nav>
+    <p>Graphite & Iris<br>Ant Design 基础上的<br>任务导向设计语言</p>
+  </aside>
+  <div class="specimen-main">
+    <header class="specimen-toolbar">
+      <span>Design Token / 可交互样张</span>
+      <div class="specimen-controls">
+        <label>主题<select id="theme"><option value="light">浅色</option><option value="dark">深色</option></select></label>
+        <label>密度<select id="density"><option value="comfortable">舒适</option><option value="compact">紧凑</option></select></label>
+      </div>
+    </header>
+    <main>
+      <section id="intro" class="specimen-intro">
+        <h1>让任务清晰，而不是让颜色更多。</h1>
+        <p>Graphite & Iris <span>深石墨导航 · 冷灰画布 · 靛蓝操作 · 克制的状态色</span></p>
+        <p class="ops-muted">原生 HTML/CSS Token 样张；以下业务内容均为示例数据，不连接生产系统，也不代表 AntD 渲染验收。</p>
+      </section>
+      <section id="task" class="ops-section">
+        <div class="specimen-section-heading"><h2>任务与状态</h2><span class="ops-muted">同一套令牌，不同的任务结构</span></div>
+        <div class="ops-panel">
+          <div class="specimen-mode-control" aria-label="任务展示模式">
+            <button type="button" data-mode="current" aria-pressed="true">当前任务</button>
+            <button type="button" data-mode="history" aria-pressed="false">历史只读</button>
+            <button type="button" data-mode="completed" aria-pressed="false">完成结果</button>
+          </div>
+          <section class="ops-task" aria-labelledby="task-title">
+            <div class="ops-history" id="history-notice" hidden><span>历史记录 · 只读 · 示例审批快照</span><button id="return-current" type="button">返回当前阶段</button></div>
+            <div class="ops-task__body">
+              <div class="ops-task__content">
+                <div class="ops-task__title-row"><h2 id="task-title">Staging 资源已交付</h2><span id="task-state" class="ops-status" data-state="pending">待申请人确认</span></div>
+                <div id="task-detail" class="ops-task__detail">系统交付与自动校验已完成；申请人确认后才能结束本次流程。</div>
+                <div class="ops-muted">示例服务 · 新增 Kafka Topic · 仅演示信息层级</div>
+              </div>
+              <div class="ops-task__action"><button id="confirm" class="specimen-primary" type="button">确认交付（演示）</button></div>
+            </div>
+          </section>
+          <div class="specimen-evidence" aria-label="示例交付证据">
+            <div><span>系统执行</span><strong class="ops-status" data-state="succeeded">已完成</strong></div>
+            <div><span>交付物校验</span><strong>4 / 4 项通过</strong></div>
+            <div><span>申请人确认</span><strong id="acceptance">尚未确认</strong></div>
+          </div>
+          <details><summary>查看示例审批与交付记录</summary><p class="ops-muted">此处在实际应用中展示对应的冻结材料、验证证据及关联工单；不使用当前配置替代历史快照。</p></details>
+          <p id="feedback" class="ops-muted" role="status"></p>
+        </div>
+      </section>
+      <section id="tokens" class="ops-section">
+        <div class="specimen-section-heading"><h2>颜色与语义</h2><span class="ops-muted">颜色值来自生成 CSS；切换主题可检查配对</span></div>
+        <div class="specimen-palette" id="palette"></div>
+        <div class="specimen-semantic">
+          <span class="ops-status" data-state="running">正在执行</span>
+          <span class="ops-status" data-state="succeeded">校验通过</span>
+          <span class="ops-status" data-state="blocked">等待补充</span>
+          <span class="ops-status" data-state="failed">交付失败</span>
+          <span class="ops-status" data-state="pending">尚未检查</span>
+        </div>
+      </section>
+      <section id="facts" class="ops-section">
+        <div class="specimen-section-heading"><h2>只读属性，而非禁用表单</h2><span class="ops-muted">技术标识可以完整读取；数值与单位不拆开</span></div>
+        <div class="ops-panel">
+          <dl class="ops-facts" aria-label="示例资源规格">
+            <div class="ops-facts__item" data-full-width="true"><dt>Topic 名称</dt><dd class="ops-code">example-service-events-staging</dd></div>
+            <div class="ops-facts__item"><dt>峰值吞吐</dt><dd class="ops-number">500 TPS</dd></div>
+            <div class="ops-facts__item"><dt>分区 / 副本</dt><dd class="ops-number">6 / 3</dd></div>
+            <div class="ops-facts__item"><dt>保留时间</dt><dd class="ops-number">7 天</dd></div>
+            <div class="ops-facts__item"><dt>存储规格</dt><dd class="ops-number">20 GiB</dd></div>
+          </dl>
+        </div>
+      </section>
+      <footer>24 / 20 / 16 / 14 / 13 px 文字层级 · 36 / 32 px 控件密度 · 普通面板无阴影</footer>
+    </main>
+  </div>
+  <script src="specimen.js"></script>
+</body>
+</html>

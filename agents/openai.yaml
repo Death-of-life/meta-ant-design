@@ -1,4 +1,4 @@
 interface:
   display_name: "Meta Ant Design"
-  short_description: "突出重点、克制清晰的 Ant Design 企业后台设计"
-  default_prompt: "使用 $meta-ant-design 重新设计这个 Ant Design Pro 页面，让重点一眼可见且保持企业后台克制。"
+  short_description: "AntD 企业后台：按任务重构页面、语义 Token 与证据化验收"
+  default_prompt: "Use $meta-ant-design to inspect this AntD interface, preserve its business behavior, recompose it around the actual user task, and verify the relevant states. Do not default to hero cards or KPI grids."

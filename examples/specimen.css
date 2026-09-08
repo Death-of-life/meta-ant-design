@@ -1,0 +1,55 @@
+.specimen { margin: 0; background: var(--ops-canvas); }
+.specimen [hidden] { display: none !important; }
+.specimen-nav { position: fixed; inset: 0 auto 0 0; width: var(--ops-layout-nav); padding: var(--ops-space-xxl) var(--ops-space-xl); display: flex; flex-direction: column; gap: var(--ops-space-section); background: var(--ops-shell); color: var(--ops-shell-text); }
+.specimen-nav a { color: var(--ops-shell-muted); text-decoration: none; }
+.specimen-nav a:focus-visible { outline-color: var(--ops-shell-focus); }
+.specimen-brand { font-size: var(--ops-font-size-result); font-weight: var(--ops-weight-strong); color: var(--ops-shell-text) !important; }
+.specimen-brand span { display: block; font-size: var(--ops-font-size-caption); font-weight: var(--ops-weight-regular); color: var(--ops-shell-muted); margin-top: var(--ops-space-sm); }
+.specimen-nav nav { display: grid; gap: var(--ops-space-sm); }
+.specimen-nav nav a { padding: var(--ops-space-md); border-radius: var(--ops-radius-control); }
+.specimen-nav nav a:hover { background: var(--ops-shell-selected); color: var(--ops-shell-selected-text); }
+.specimen-nav p { margin-top: auto; color: var(--ops-shell-muted); font-size: var(--ops-font-size-caption); }
+.specimen-main { margin-inline-start: var(--ops-layout-nav); min-width: 0; }
+.specimen-toolbar { min-height: var(--ops-layout-header); padding: var(--ops-space-md) var(--ops-layout-page-inset); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--ops-space-lg); background: var(--ops-surface); border-bottom: 1px solid var(--ops-border); color: var(--ops-text-secondary); }
+.specimen-controls { display: flex; flex-wrap: wrap; gap: var(--ops-space-lg); }
+.specimen-controls label { display: flex; align-items: center; gap: var(--ops-space-sm); }
+.specimen :where(button, select) { font: inherit; color: var(--ops-text); background: var(--ops-surface); border: 1px solid var(--ops-control-border); border-radius: var(--ops-radius-control); min-height: var(--ops-control-height); padding: var(--ops-space-xs) var(--ops-space-md); cursor: pointer; }
+.specimen :where(button, select):hover { border-color: var(--ops-primary-hover); }
+.specimen-main main { max-width: var(--ops-layout-reading-max); margin-inline: auto; padding: var(--ops-space-xxl) var(--ops-layout-page-inset); }
+.specimen-intro { margin-bottom: var(--ops-space-xxl); }
+.specimen-intro h1 { font-size: var(--ops-font-size-page); line-height: var(--ops-line-height-page); margin: 0 0 var(--ops-space-md); font-weight: var(--ops-weight-strong); }
+.specimen-intro p { margin: var(--ops-space-sm) 0 0; }
+.specimen-intro p > span { color: var(--ops-text-secondary); margin-left: var(--ops-space-md); }
+.specimen-section-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--ops-space-sm); margin-bottom: var(--ops-space-lg); }
+.specimen-section-heading h2 { font-size: var(--ops-font-size-section); line-height: var(--ops-line-height-section); margin: 0; }
+.specimen-mode-control { display: flex; flex-wrap: wrap; gap: var(--ops-space-sm); margin-bottom: var(--ops-space-lg); }
+.specimen-mode-control button { border-color: transparent; background: transparent; color: var(--ops-text-secondary); }
+.specimen-mode-control button[aria-pressed='true'] { color: var(--ops-selected-text); background: var(--ops-selected); border-color: var(--ops-primary); }
+.specimen .specimen-primary { background: var(--ops-primary); color: var(--ops-on-primary); border-color: var(--ops-primary); font-weight: var(--ops-weight-medium); }
+.specimen .specimen-primary:hover { background: var(--ops-primary-hover); border-color: var(--ops-primary-hover); }
+.specimen .specimen-primary:active { background: var(--ops-primary-active); border-color: var(--ops-primary-active); }
+.specimen-evidence { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding-block: var(--ops-space-xl); gap: var(--ops-space-xl); }
+.specimen-evidence > div { display: grid; gap: var(--ops-space-sm); }
+.specimen-evidence > div > span { color: var(--ops-text-secondary); }
+.specimen details { border-top: 1px solid var(--ops-border); padding-top: var(--ops-space-lg); }
+.specimen summary { cursor: pointer; color: var(--ops-text-secondary); width: fit-content; }
+.specimen #feedback:empty { display: none; }
+.specimen-palette { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--ops-space-lg); }
+.specimen-swatch { display: grid; gap: var(--ops-space-xs); min-width: 0; }
+.specimen-swatch__color { height: 60px; border-radius: var(--ops-radius-control); border: 1px solid var(--ops-border); }
+.specimen-swatch code { color: var(--ops-text-muted); font-size: var(--ops-font-size-caption); }
+.specimen-semantic { display: flex; flex-wrap: wrap; gap: var(--ops-space-xl); margin-top: var(--ops-space-xl); }
+.specimen footer { border-top: 1px solid var(--ops-border); margin-top: var(--ops-space-xxl); padding-top: var(--ops-space-lg); color: var(--ops-text-muted); font-size: var(--ops-font-size-caption); }
+@media (max-width: 1100px) { .specimen-palette { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .specimen-nav { position: static; width: auto; padding: var(--ops-space-lg); gap: var(--ops-space-lg); }
+  .specimen-nav p { display: none; }
+  .specimen-nav nav { display: flex; flex-wrap: wrap; }
+  .specimen-nav nav a { padding: var(--ops-space-sm); }
+  .specimen-main { margin: 0; }
+  .specimen-toolbar, .specimen-main main { padding-inline: var(--ops-layout-mobile-inset); }
+  .specimen-evidence { grid-template-columns: minmax(0, 1fr); gap: var(--ops-space-lg); }
+  .specimen-palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .specimen-intro p > span { display: block; margin: var(--ops-space-sm) 0 0; }
+  .specimen .ops-panel { padding: var(--ops-space-lg); }
+}

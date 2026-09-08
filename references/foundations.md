@@ -1,165 +1,29 @@
-# Foundations
+# 视觉基础：Graphite & Iris
 
-## Contents
+目标不是更灰、更空或更多装饰，而是让任务、证据和操作具有可辨认的层级。默认方案为深石墨导航、冷灰画布、白色工作区和靛蓝主操作。深色导航不等于整站暗色模式；真正暗色模式有独立成对令牌。
 
-1. Design stance
-2. Semantic tokens
-3. Typography
-4. Spacing and alignment
-5. Surfaces and elevation
-6. Density
-7. Motion
+## 视觉语言
 
-## 1. Design stance
+- 稳定导航提供品牌识别；内容区把空间让给真实工作。已有导航适用时不重建、不新增菜单。
+- 页面标题 24/32，任务结论 20/28，区块标题 16/24，正文 14/22，辅助信息 13/20；中文不使用过度负字距，不用淡到难读的灰。
+- 同一组靠 4/8/12px 间距绑定，不同区块靠 24/32/40px 分开。留白服务分组，不用固定大高度制造空白。
+- 正常面板无阴影，控件圆角 6px，工作面板 10px，浮层 12px。浮层才使用明显投影。
+- 一个区域的边距由一个容器负责。PageContainer 已有 padding 时，不在第一层 Card 再叠一遍。
+- 一个阅读区只有一个主要结论；主色不同时占满标题、标签、提示、进度条和操作。
 
-Use a quiet neutral canvas and spend emphasis intentionally. Enterprise UI should feel decisive, not decorative.
+## 颜色的职责
 
-```text
-Stable base     neutral canvas, white surfaces, readable type
-Meaning         status color only where state matters
-Action          primary color for the main action, selection, and links
-Hierarchy       type, spacing, and placement before color or shadow
-Restraint       one memorable emphasis, not many competing accents
-```
+`primary/selected` 表示操作和选中；`success/warning/error/info` 表示经过数据验证的状态；`surface/subtle/border` 组织信息。环境与类别默认中性。Live 不天然表示错误，Staging 不天然表示成功。
 
-Use Ant Design tokens as the source of truth. If the project already defines a theme, extend it rather than replacing it.
+成功一般使用小状态标记与清晰结果。仅在失败、阻断、不可逆影响等确实需要停下来理解的情况下使用带底色的通知。不要为了“高级感”自动添加渐变、玻璃、彩色 KPI、巨型数字、伪风险分数或插画；用户明确要求的品牌视觉可另行设计，但不能遮蔽工作内容。
 
-## 2. Semantic tokens
+## 密度
 
-Use purpose names in page CSS. Map them to Ant tokens in theme-aware code.
+`comfortable`：36px 控件、12px 表格单元格纵向 padding；适合审批、明细和常规填写。
+`compact`：32px 控件、8px 单元格纵向 padding；适合高频台账、日志、资源列表。密度不是把字体缩小：正文仍为 14px。
 
-```text
-Surface
-  canvas          colorBgLayout
-  primary         colorBgContainer
-  elevated        colorBgElevated
-  subtle          colorFillQuaternary / colorFillTertiary
+行高随内容变化，不把所有表格强制成固定高度。粗指针交互目标建议 44px。复杂编辑器不为了保住三列而缩窄所有字段；先合并导航或改为列表→详情。
 
-Text
-  primary         colorText
-  secondary       colorTextSecondary
-  metadata        colorTextTertiary, sparingly
-  disabled        colorTextDisabled, disabled controls only
+## 主题权威
 
-Boundary
-  subtle          colorBorderSecondary
-  control         colorBorder
-
-Meaning
-  info            colorInfo / colorInfoBg / colorInfoBorder
-  success         colorSuccess / colorSuccessBg / colorSuccessBorder
-  warning         colorWarning / colorWarningBg / colorWarningBorder
-  danger          colorError / colorErrorBg / colorErrorBorder
-```
-
-Do not use success/warning/error as decorative themes for ordinary KPI cards. A status surface should contain an actual state, consequence, or action.
-
-Primary blue is not a general-purpose highlight. Reserve it for:
-
-- the one filled primary action in a region;
-- selection or current navigation state;
-- links and actionable text;
-- one neutral informational focus when no semantic status applies.
-
-Avoid full-saturation status backgrounds. Prefer a neutral surface with a narrow semantic accent, subtle tint, icon, label, and readable consequence.
-
-## 3. Typography
-
-Use this cross-level scale as a default, then inherit the project's established scale when it already works:
-
-| Role | Size / line height | Weight | Use |
-|---|---:|---:|---|
-| Focus metric | 32–40 / 40–48 | 600 | One L0 metric or state |
-| Page title | 24–28 / 32–36 | 600 | Page identity |
-| Section lead | 18–20 / 26–28 | 600 | L1 section heading |
-| Metric | 24–32 / 32–40 | 600 | L2 supporting KPI |
-| Body | 14 / 22 | 400 | Main content |
-| Label | 14 / 22 | 500 | Field/table/metric label |
-| Metadata | 12–13 / 20 | 400 | Timestamps and provenance |
-
-Within one region, avoid creating many sizes. Rank content in this order:
-
-```text
-position -> weight -> primary/secondary text color -> size
-```
-
-Rules:
-
-- Give each region one lead.
-- Keep body copy at body size; do not shrink important explanations into metadata.
-- Use secondary text for support, not disabled text.
-- Use tabular numerals for comparable metrics when the font/theme supports them.
-- Give units, denominators, and timestamps less weight than the main value.
-- Truncate only when the full value is recoverable through `Tooltip`, expansion, or detail view.
-
-## 4. Spacing and alignment
-
-Use a 4px base with clearly different binding and separating gaps:
-
-```text
-4px   icon internals, tightly bound metadata
-8px   icon-to-label, title-to-status, compact actions
-12px  label-to-value, compact row groups
-16px  ordinary component groups, card internal vertical rhythm
-24px  page inset, section separation, card horizontal inset
-32px  major section break on spacious pages
-48px  rare narrative break; not a default dashboard gap
-```
-
-The container owns padding. Children should not add competing outer margins.
-
-Hold one vertical content line per region:
-
-- page title, focus hero, sections, and table/card edges share the page inset;
-- a card header, body, and footer share one internal line;
-- tables may let cell padding own the content line rather than double-padding the wrapper;
-- hover/selected backgrounds may bleed past the text line to the row edge.
-
-Grouping must remain readable after borders are removed. If every gap is 16px, proximity does no work; use tight gaps inside an item and generous gaps between groups.
-
-## 5. Surfaces and elevation
-
-Escalate container strength only as needed:
-
-```text
-alignment/gap -> Divider -> section -> subtle surface -> Card -> overlay
-```
-
-Use `Card` or `ProCard` for:
-
-- a self-contained metric or chart widget;
-- a critical summary with an explicit consequence;
-- a settings group with its own save boundary;
-- a hard interaction boundary;
-- a selectable gallery/grid item.
-
-Do not use cards for:
-
-- every record in a dense list;
-- every normal page section;
-- nested subdivisions inside a card;
-- a full-width stack where spacing and section headings are sufficient.
-
-Use one light elevation for page widgets. Reserve stronger elevation for floating overlays. Avoid hover lift on non-clickable cards.
-
-## 6. Density
-
-Choose density per region, not per product slogan:
-
-```text
-compact   logs, monitoring streams, large operational tables
-balanced  most tables, lists, dashboards, and detail pages
-spacious  short high-stakes forms, approvals, destructive confirmations
-```
-
-All controls in one row must share height. On coarse pointers, keep interactive targets at least 44×44 CSS px even when the visible control is compact; add hit area without inflating data rows unnecessarily.
-
-## 7. Motion
-
-Use motion to explain state change, not to decorate:
-
-- 120–200ms for hover, selection, and simple reveal;
-- 180–240ms for drawers and region transitions;
-- no looping decorative animation in operational pages;
-- do not animate frequently updating metrics by default;
-- respect `prefers-reduced-motion` and keep all operations usable with animation disabled.
+默认数值以 `assets/ops-pilot.tokens.json` 为准。`node scripts/tokens.mjs` 生成 TS/CSS。已有产品 Token 时只在统一映射层接入，不建立一套与当前 ConfigProvider 无关的页面颜色。
