@@ -1,192 +1,48 @@
-# Composition patterns
+# 业务模式与组件边界
 
-## Contents
+## TaskSummary：紧凑任务结论
 
-1. Focus hero
-2. Metric band
-3. Attention queue
-4. Trend with explanation
-5. Master-detail investigation
-6. Compact state strip
-7. Section header
-8. State handling
-
-## 1. Focus hero
-
-Use when the page has a real L0 state, decision, outcome, or task. Do not use as a decorative banner.
-
-Required content:
+仅在确有任务结论时使用，不是每页必填。保持白/中性底色，状态颜色只用于行内标记。
 
 ```ts
-type FocusHeroContent = {
-  eyebrow?: string;
-  title: string;
-  summary: string;
-  value?: string | number;
-  status?: 'neutral' | 'info' | 'success' | 'warning' | 'danger';
-  consequence?: string;
-  primaryAction?: string;
-  metadata?: string[];
-};
+type TaskState = 'pending' | 'running' | 'succeeded' | 'blocked' | 'failed' | 'cancelled';
+type ViewMode = 'current' | 'history' | 'completed';
 ```
 
-Composition:
+`assets/TaskSummary.tsx` 的所有公开选项：
 
 ```text
-eyebrow/status
-lead title or value
-one-sentence conclusion
-consequence or recommended next step
-one primary action + optional low-emphasis secondary action
-owner/scope/baseline/last-updated metadata
+共有：title, state, stateLabel, detail?, metadata?
+current：primaryAction? { label, onClick, loading?, disabled?, disabledReason? }
+history：snapshotLabel, returnToCurrent；禁止 primaryAction
+completed：禁止 primaryAction；下一步导航放在结果区域
 ```
 
-Use `assets/FocusHero.tsx` as a starting point. Keep the background neutral or subtly semantic. Do not use a photo, gradient, illustration, or oversized 64px metric in a normal admin console.
+状态由应用传入，不负责推断审批和验收。只读模式不能接收操作不等于安全授权：服务端权限、对象版本与一次性凭证校验仍由原系统负责。失败的历史记录显示当时失败，不自动生成“重试”。
 
-## 2. Metric band
-
-Use for two to six related peer metrics. Prefer one shared surface with cells and dividers.
-
-```ts
-type MetricTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
-
-type MetricItem = {
-  key: string;
-  label: string;
-  value: string | number;
-  delta?: string;
-  note?: string;
-  tone?: MetricTone;
-  emphasized?: boolean;
-};
-```
-
-Rules:
-
-- Order by decision value, not database order.
-- Mark at most one item `emphasized` unless all peers are truly equal.
-- Define the delta basis in the note or tooltip.
-- Treat `up` and `down` as direction, not success/error; tone depends on business meaning.
-- Use one to four columns; wrap five or six items. Do not squeeze six into one desktop row by default.
-- Move low-value counters into the detailed data surface.
-
-Use `assets/MetricBand.tsx` as a starting point.
-
-## 3. Attention queue
-
-Use for exceptions that require review, triage, or action.
-
-```ts
-type AttentionSeverity = 'critical' | 'high' | 'medium' | 'low';
-
-type AttentionItem = {
-  id: string;
-  severity: AttentionSeverity;
-  title: string;
-  description: string;
-  scope?: string;
-  observedAt?: string;
-  actionLabel?: string;
-};
-```
-
-Rules:
-
-- Sort worst-first, then by recency or impact.
-- Use dense rows with a severity mark, label, consequence, scope, and time.
-- Make the row or explicit link open detail; avoid several buttons in every row.
-- Use a stable empty state that says what is being checked and when it last ran.
-- Show a count in the section heading, not as a decorative badge on every item.
-
-Use `assets/AttentionList.tsx` as a starting point.
-
-## 4. Trend with explanation
-
-Use when the user must understand change over time and why it happened.
+## ReadOnlyFacts：阅读不是不可编辑的表单
 
 ```text
-section lead + time range
-headline value and delta
-primary chart
-two or three annotated drivers/events
-link to underlying records
+label：整个属性组的可访问名称
+items[]：key, label, value, fullWidth?, code?
 ```
 
-Rules:
+长名称单独占行并可选中复制；数字和单位可以用 `ops-number` 连在一起。`null/undefined` 显示未提供，0 不被当成空值；布尔值由业务层先格式化为“是/否”。对审核差异使用原值→新值并明确新增/删除，不仅改变字色。
 
-- One chart answers one question.
-- Annotate releases, incidents, policy changes, or thresholds only when they explain the movement.
-- Keep chart title, legend, units, and time zone explicit.
-- Avoid dual axes unless the relationship cannot be shown otherwise.
-- Provide a table or accessible summary for exact values.
-- Keep loading, empty, partial, and error states at a stable chart height.
+## 历史模式
 
-## 5. Master-detail investigation
+顶部紧凑显示历史阶段、材料依据和返回当前阶段入口。中性背景；不得显示“当前执行/SRE 操作区”冒充当前状态。展示原审批人、当时证据、当时结论；旧记录不可恢复时明确缺失，不能取当前值补齐。
 
-Use for incidents, logs, requests, users, resources, or orders where selection should preserve list context.
+## 流程概览
 
-```text
-wide screen
-  queue/table: flexible
-  inspector: fixed 340–420px
+主界面使用业务阶段和当前责任人。完整编排、节点编号、跳过分支位于完整流程/诊断入口。当前业务节点与当前查看节点分别存储和渲染。点击历史节点只切查看模式，不修改工作流。
 
-compact screen
-  queue/table: full width
-  inspector: Drawer or route
-```
+## 进度、指标与异常
 
-Inspector order:
+已知总量且进度变化对行动有用时才用进度条。不能用“经过节点数/全部节点数”估算含条件分支的完成率。单条完成记录直接显示数量与结论。
 
-```text
-identity + state
-primary response action
-critical facts
-timeline/evidence
-secondary actions
-```
+`MetricBand` 和 `AttentionList` 仍可用于真实指标/异常，不能作为所有页面的默认装饰。数据未接入时不生成“无风险/全部正常”。排序应由有依据的业务优先级决定，并避免用户复制或选择时突然重排。
 
-Do not render an empty white panel with no instruction. Use `Empty` with a specific selection prompt. If width is user-resizable, enforce a minimum for both regions and persist the preference only if the project already has a settings mechanism.
+## v1 兼容
 
-## 6. Compact state strip
-
-Use instead of a full focus hero when a table, form, or detail surface should remain dominant but an important state must be visible.
-
-```text
-[semantic icon] concise state + consequence        [one action]
-```
-
-Use `Alert` when its semantics and layout fit. Otherwise use a shallow section with a subtle semantic background. Keep it to one or two lines on desktop, allow wrapping on mobile, and never truncate the action or consequence into ambiguity.
-
-## 7. Section header
-
-Every major region has one lead and optional supporting control.
-
-```text
-title
-short explanatory sentence                      secondary control/action
-```
-
-Rules:
-
-- Do not repeat the page title inside the first card.
-- Put the time-range or view control in the section it changes.
-- Use a count only when it helps scope the result.
-- Avoid a toolbar containing only icons; label unfamiliar actions.
-- Keep region-level actions secondary to the page action.
-
-## 8. State handling
-
-Use Ant components rather than custom gray placeholders:
-
-| State | Pattern |
-|---|---|
-| loading | `Skeleton`, table loading, chart skeleton at stable height |
-| no data yet | `Empty` with setup/import action when appropriate |
-| no query results | `Empty` with reset-filter action |
-| partial | keep available data, show a scoped `Alert` for missing sources |
-| stale | timestamp + warning/info label + refresh action |
-| error | `Alert`/`Result` with retry and diagnostic reference |
-| permission denied | `Result status="403"` and a request-access path |
-| success terminal | `Result` with the next logical action, not confetti |
-
-An empty state must say what is empty, why that may be expected, and the next useful action. An error state must not erase still-valid data unless continuing would be unsafe.
+`FocusHero` 仅是过渡适配器，保留原 props；取消默认大底色、阴影和巨型标题。新页面不从它开始。变更视觉不代表将已有 FocusHero 中的重要信息删除，按语义迁移到任务、结果、证据区域。

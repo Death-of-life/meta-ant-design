@@ -1,105 +1,42 @@
-# Review rubric
+# 验收门禁：证据优先，不自评“高级感”
 
-Use this after implementation and for design audits. A blocking failure prevents completion.
+## 任一失败即阻断
 
-## Scoring
+1. 历史回看出现可执行变更/重试/审批入口，或把当前数据当冻结证据。
+2. 系统交付、校验、申请人验收被错误合并为“全部完成”。
+3. 为了精简而移除必需证据、重要失败、责任人或有效权限检查。
+4. 环境/资源切换丢草稿，复制配置静默覆盖，保存草稿冒充提交或交付。
+5. 主操作被遮挡、键盘不可达、文字溢出或单位拆散影响判断。
+6. 编造业务指标、成功状态、风险分数、环境、用户或验收结论。
+7. 声称已运行没有运行的 typecheck、测试、浏览器验证或生产验收。
 
-```text
-2  clearly satisfied
-1  partially satisfied or fragile
-0  absent, wrong, or unverified
-```
+## 视觉检查
 
-Do not average away a blocking failure. Report blockers first.
+首屏能找出对象、当前结论、下一步及必要依据；表格/表单/结果是主要工作区域而非重复提示；成功颜色不过度铺底；普通面板无默认阴影；当前选中与业务状态可分别理解；阅读材料不是 disabled Form。
 
-## A. Intent and hierarchy — 20 points
+这不是“所有页面禁止卡片”或“必须只有一条状态”。每个容器/摘要应说明其独立作用；多个真实异常不能被强调预算掩盖。
 
-- [ ] The page job is expressible in one sentence. (blocking)
-- [ ] The five-second answer is visible in the first meaningful viewport. (blocking)
-- [ ] There is one L0 anchor or one clearly dominant principal data surface. (blocking)
-- [ ] Critical state outranks ordinary KPIs.
-- [ ] Scan order follows decision -> evidence -> detail.
-- [ ] Each region has one lead.
-- [ ] Hierarchy survives grayscale.
-- [ ] Hierarchy survives the squint test.
-- [ ] Low-priority metadata is visibly but accessibly demoted.
-- [ ] Repeated cards/metrics are not falsely equal.
+## 五个回归情境
 
-## B. Composition and containers — 16 points
+| 情境 | 预期 |
+|---|---|
+| 全部交付完成的申请 | 结果在前，历史可追溯，无执行面板 |
+| 执行/校验完成但待验收 | 清晰显示待确认，不能显示流程全部结束 |
+| 当前用户回看之前审核 | 只读、快照依据、返回当前；无 mutation |
+| 长资源名、0 个结果、无权限 | 名称完整可取；0 不丢；权限结果明确 |
+| 编辑多环境然后切换/复制 | 草稿保留，覆盖预览与取消有效 |
 
-- [ ] The frame and region widths were chosen before local styling.
-- [ ] Ordinary structure uses sections/gaps before cards.
-- [ ] Dense records render as rows. (blocking)
-- [ ] There are no unjustified nested cards.
-- [ ] Related metrics share a coherent group.
-- [ ] Header/body/footer content lines align.
-- [ ] Padding has one owner; no double insets.
-- [ ] Tight and generous gaps create visible grouping.
+再验证宿主已有的失败、部分成功、空结果、真实数据延迟等情况；不添加不存在的数据语义。
 
-## C. Actions and semantics — 14 points
-
-- [ ] There is at most one filled primary action per region. (blocking)
-- [ ] The page-level primary action is unambiguous.
-- [ ] Destructive actions are explicit and safely confirmed.
-- [ ] Row actions are limited; overflow contains lower-priority actions.
-- [ ] Status color is paired with text/icon. (blocking)
-- [ ] Primary color is not decorative.
-- [ ] Actions are located near the object/state they change.
-
-## D. Ant Design correctness — 16 points
-
-- [ ] Installed Ant/Pro versions and APIs were inspected. (blocking)
-- [ ] Existing shell/theme/router/form/data patterns are reused.
-- [ ] Semantic tokens replace scattered magic colors/spacing.
-- [ ] Native Ant components are used instead of custom imitations.
-- [ ] Table columns, overflow, actions, and pagination are deliberate.
-- [ ] Filter presentation matches complexity.
-- [ ] Overlay lifecycle/style slots match the installed version.
-- [ ] TypeScript has no introduced `any` or type errors. (blocking)
-
-## E. Responsive and interaction — 18 points
-
-- [ ] Every region has a responsive keep/resize/move/collapse/replace rule.
-- [ ] Desktop, 1024px, mobile, and short viewport are verified. (blocking when supported)
-- [ ] Modal/Drawer commit actions remain visible and reachable. (blocking)
-- [ ] Horizontal data/rails remain touch-scrollable. (blocking)
-- [ ] No broad `overflow: hidden` or `touch-action: none` masks layout issues.
-- [ ] Custom pointer gestures handle threshold, cancel, capture, and cleanup.
-- [ ] Keyboard operation and focus order work. (blocking)
-- [ ] Touch targets are adequate on coarse pointers.
-- [ ] 200% zoom does not clip essential text/actions.
-
-## F. States, data, and accessibility — 16 points
-
-- [ ] Loading preserves layout and communicates progress.
-- [ ] Empty distinguishes no data from no query results.
-- [ ] Error identifies scope and recovery; valid data is retained when safe.
-- [ ] Partial and stale data are explicit.
-- [ ] Permission denied has a useful next path.
-- [ ] Live updates do not cause disruptive reordering/layout shift.
-- [ ] Icon-only actions have accessible names. (blocking)
-- [ ] Charts have labels/summary and exact-data access when required.
-
-## Result bands
+## 验证记录格式
 
 ```text
-90–100  ready, provided there are no blockers
-75–89   usable but refine before design-system adoption
-60–74   significant hierarchy or robustness debt
-<60     redesign the composition before polishing components
+SOURCE      路由/文件/截图区域
+BEFORE      具体问题
+CHANGE      信息迁移或组件变化
+CHECK       类型/单测/浏览器/交互分别列出
+EVIDENCE    视口、模式、观察或测试输出
+NOT RUN     未运行项目；限制与影响
 ```
 
-## Finding format
-
-For each problem report:
-
-```text
-SEVERITY   blocker | high | medium | low
-EVIDENCE   screenshot region, component, selector, or file path
-IMPACT     what the user misses, misreads, or cannot operate
-CAUSE      hierarchy, container, token, API, viewport, pointer, etc.
-REMEDY     concrete Ant component/layout/token change
-VERIFY     exact width, state, interaction, or test
-```
-
-Never write “looks bland” as a finding. Identify the equal weights, absent anchor, misleading color, repeated container, or broken scan order that creates the effect.
+仓库自检：`npm test` 检查生成漂移、对比度、文档链接和回归约束；宿主 `typecheck` 与真实页面浏览器测试另外执行。静态 HTML Token specimen 不是 AntD 组件测试，也不是线上 Ops Pilot 验收。不得以平均分掩盖阻断项。

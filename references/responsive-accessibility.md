@@ -1,231 +1,29 @@
-# Responsive and accessibility contract
+# 响应式与可访问性
 
-## Contents
+## 内容压力优先
 
-1. Width contract
-2. Viewport and scrolling
-3. Tables and horizontal gestures
-4. Modal and Drawer safety
-5. Touch and pointer behavior
-6. Keyboard and focus
-7. Semantics and status
-8. Motion and live data
-9. Verification matrix
+1440×900、1366×768/600、1024×768 是桌面验证基线；支持移动端时加入 390×844、320px 窄屏与实际客户端。宽度不够先移动辅助栏，不把三个工作区一起挤瘦。复杂编辑器在窄屏变成资源列表→详情，切换后保留草稿和返回位置。
 
-## 1. Width contract
+网格子项 `min-width: 0`，技术名称可以合理换行且完整内容可取；数字单位不拆散。真正需要二维比较的表格允许局部横向滚动，不用 body overflow:hidden 掩盖问题。
 
-Ant breakpoints are useful implementation hooks, but choose behavior by content pressure rather than device names.
+长页面使用单一明确的主滚动容器。提交栏可以 sticky，但必须预留内容和焦点空间，在短视口、软键盘及 200% 缩放时不能挡住最后一个字段。浮层正文滚动，关闭/确认可达。
 
-```text
-xs   <576px
-sm   >=576px
-md   >=768px
-lg   >=992px
-xl   >=1200px
-xxl  >=1600px
-```
+## 颜色与交互
 
-For every frame region declare one action at each pressure point:
+普通文字目标至少 4.5:1；大字可适用 3:1，但不能把普通辅助信息缩小后声称豁免。用于辨识控件的必要边界和状态图形目标至少 3:1；纯装饰分割线无需强行加深。禁用文字不是只读正文的配色。
 
-```ts
-type ResponsiveBehavior =
-  | 'keep'
-  | 'resize'
-  | 'move'
-  | 'collapse'
-  | 'replace';
-```
+本库把装饰边框与控件边框分开，并验证 light/dark 中声明的文字/背景、状态/浅底、按钮 normal/hover/active、选中、焦点和导航颜色组合。测试不等于整站 WCAG 认证：AntD 派生色、浮层、图表和宿主覆盖样式仍须实测。
 
-Example:
+可交互元素必须键盘可达；不用可点击 div 代替 button/link；图标按钮必须有可访问名称。保留明确 focus-visible；深色导航使用其单独的浅色焦点环。
 
-```text
-Region          >=1200       992–1199        768–991       <768
-navigation      keep side    collapse side   replace       replace
-main evidence   keep         resize          keep          keep
-triage rail     keep 380     move below      move below    collapse details
-inspector       keep panel   replace Drawer  replace       replace full width
-metric band     4 columns    2 columns       2 columns     1 column
-```
+44px 为本设计建议的粗指针目标，不应误称 WCAG AA 的统一最小尺寸。状态始终带可读文字，不能只用红绿点。避免每次进度/日志刷新都触发整个页面 aria-live 播报。
 
-Do not keep several regions and shrink all of them until none is usable. Drop, move, or replace secondary regions first.
+## 状态验证
 
-## 2. Viewport and scrolling
+覆盖实际存在的 loading、empty、error、partial、permission、current、history、completed、editing。新鲜度只在数据具有有效时间语义时设计；不为静态/手工维护的台账强加“stale”。未知或未检查不能显示“正常”。
 
-Use modern viewport units with a fallback when a full-height region is required:
-
-```css
-.app-viewport {
-  min-height: 100vh;
-  min-height: 100dvh;
-}
-```
-
-Rules:
-
-- Avoid `height: 100vh` on mobile when browser chrome or an on-screen keyboard can reduce the usable viewport.
-- Give each scrolling region exactly one owner. Avoid nested vertical scroll containers unless the frame deliberately pins a header/footer.
-- Add `min-width: 0` to flex/grid children that must shrink.
-- Add `min-height: 0` to flex children that own vertical scrolling.
-- Do not place the entire application under `overflow: hidden` to suppress one layout bug.
-- Account for safe-area insets on full-screen mobile overlays when the host supports notches/home indicators.
-
-```css
-.safe-footer {
-  padding-bottom: max(16px, env(safe-area-inset-bottom));
-}
-```
-
-## 3. Tables and horizontal gestures
-
-Wide tables may scroll horizontally. Preserve that gesture intentionally:
-
-```css
-.table-scroll-region {
-  min-width: 0;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x pan-y;
-}
-```
-
-Rules:
-
-- Do not attach a parent `pointermove`/`touchmove` handler that calls `preventDefault()` for ordinary table or card scrolling.
-- Do not use `touch-action: none` on page, table, carousel, or hand/rail containers unless implementing a fully managed gesture surface.
-- Set `scroll.x` from column needs, not an arbitrary huge number.
-- Keep the action column accessible; fix it only when horizontal scrolling is actually enabled.
-- On phones, consider a purpose-built list/detail layout when a table would require continual two-axis scrolling.
-- A scrollable horizontal card/hand rail needs visible overflow affordance, reachable first/last items, and no overlay intercepting pointer events.
-
-## 4. Modal and Drawer safety
-
-Confirmation and commit actions must remain reachable at every supported viewport.
-
-```css
-.responsive-modal-body {
-  max-height: min(70dvh, 720px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-.responsive-modal-footer {
-  position: relative;
-  flex: 0 0 auto;
-  padding-bottom: max(12px, env(safe-area-inset-bottom));
-}
-```
-
-Rules:
-
-- Center ordinary business modals unless product context requires another placement.
-- Constrain width to the viewport: `width: min(<design-width>, calc(100vw - 32px))` or the equivalent component API.
-- Make the body the only scrollable section; keep header/footer visible.
-- Avoid fixed body heights derived from desktop dimensions.
-- Let long titles and validation text wrap without covering close or submit controls.
-- Use a full-width Drawer or dedicated route for complex mobile edits.
-- Test Android WebView and iOS Safari when those are supported clients; viewport behavior differs from desktop emulation.
-
-## 5. Touch and pointer behavior
-
-Use Pointer Events when implementing custom gestures. Do not maintain separate mouse and touch logic without a specific compatibility reason.
-
-```ts
-type PointerMode =
-  | 'native-scroll'
-  | 'tap'
-  | 'drag'
-  | 'resize';
-```
-
-```text
-native-scroll  browser owns movement; no preventDefault
-tap            normal click semantics; tolerate minor movement
-drag           capture pointer after threshold; release on end/cancel
-resize         explicit handle only; never the whole panel surface
-```
-
-Custom drag requirements:
-
-- Start only from a visible handle or draggable object.
-- Use a movement threshold so a tap does not become a drag.
-- Call `setPointerCapture()` only after drag starts.
-- Handle `pointercancel`, lost capture, route change, and component unmount.
-- Restore text selection and scrolling after the gesture.
-- Offer a keyboard/non-drag alternative for ordering or resizing when the operation matters.
-
-Touch targets:
-
-```text
-coarse pointer minimum target 44x44 CSS px
-icon-only action              aria-label required
-adjacent destructive actions  adequate separation required
-```
-
-The visible icon may remain 16–20px; enlarge its hit area.
-
-## 6. Keyboard and focus
-
-- All actions must be reachable in a logical tab order.
-- Use real `Button`, links, inputs, and table selection controls instead of clickable `div` elements.
-- Icon-only buttons need an accessible name through `aria-label` or `Tooltip` plus label.
-- Modals and Drawers must trap focus, focus a meaningful initial control, close with Escape when safe, and restore focus to the trigger.
-- Do not remove the focus ring without a visible replacement using Ant focus tokens.
-- Use `aria-current` for current navigation and `aria-expanded` for disclosure controls when the component does not supply them.
-- Keep bulk-action controls immediately after the selection context in focus order.
-
-## 7. Semantics and status
-
-- Use headings in a logical outline; visual size does not change semantic depth.
-- Pair status color with text and, when useful, an icon.
-- Announce asynchronous operation outcomes with Ant `message`/`notification` or an appropriate live region.
-- Do not announce every live metric update; announce only user-relevant state changes.
-- Tables need clear column headers and row keys.
-- Charts need an accessible title/summary and an exact-data alternative when decisions depend on precise values.
-- Error copy identifies the failed operation, retained data, and recovery action.
-
-## 8. Motion and live data
-
-```css
-@media (prefers-reduced-motion: reduce) {
-  .meta-ant-scope *,
-  .meta-ant-scope *::before,
-  .meta-ant-scope *::after {
-    scroll-behavior: auto;
-    transition-duration: 0.01ms;
-    animation-duration: 0.01ms;
-    animation-iteration-count: 1;
-  }
-}
-```
-
-Do not apply this globally without checking existing product behavior. Scope it to newly introduced patterns or use the project's motion system.
-
-Live dashboards:
-
-- show last refresh time and auto-refresh state;
-- pause or defer updates while the user is selecting/copying when reordering would disrupt them;
-- avoid layout shift when values change length;
-- preserve chart/table height during refresh;
-- distinguish stale data from an empty result.
-
-## 9. Verification matrix
-
-At minimum:
-
-| Surface | Width | Input | Verify |
-|---|---:|---|---|
-| desktop | 1440×900 | mouse + keyboard | hierarchy, shell, hover/focus, no overflow |
-| compact/tablet | 1024×768 | touch + keyboard where applicable | moved rail, modal fit, table scroll |
-| phone | 390×844 | touch | one-column order, Drawer, safe footer, horizontal gesture |
-| short viewport | 1366×600 | mouse | modal/footer reachability, vertical scroll owner |
-| zoom | 200% | keyboard | reflow, no clipped actions/text |
-
-Also verify:
-
-- `pointercancel` and interrupted gestures;
-- long translated labels and 200% text zoom;
-- loading, empty, error, partial, stale, and permission states;
-- reduced motion;
-- screen-reader names for icon actions and statuses;
-- no console errors or layout warnings.
+官方依据：
+- https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
+- https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
+- https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html
+- https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html

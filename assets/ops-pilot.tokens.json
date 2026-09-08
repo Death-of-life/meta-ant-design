@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "name": "Ops Pilot · Graphite & Iris",
+  "color": {
+    "light": {
+      "canvas": "#F5F7FB", "surface": "#FFFFFF", "elevated": "#FFFFFF", "subtle": "#F8FAFC",
+      "text": "#182230", "textSecondary": "#475467", "textMuted": "#667085", "textDisabled": "#98A2B3",
+      "border": "#E4E7EC", "controlBorder": "#858FA3", "disabledBg": "#F2F4F7",
+      "primary": "#4F46E5", "primaryHover": "#4338CA", "primaryActive": "#3730A3", "onPrimary": "#FFFFFF",
+      "selected": "#EEF2FF", "selectedHover": "#E0E7FF", "selectedText": "#3730A3", "focus": "#4F46E5",
+      "success": "#067647", "successBg": "#ECFDF3", "successBorder": "#ABEFC6",
+      "warning": "#92400E", "warningBg": "#FFFAEB", "warningBorder": "#FEDF89",
+      "error": "#B42318", "errorHover": "#912018", "errorActive": "#7A271A", "onError": "#FFFFFF",
+      "errorBg": "#FEF3F2", "errorBorder": "#FECDCA",
+      "info": "#175CD3", "infoBg": "#EFF8FF", "infoBorder": "#B2DDFF",
+      "shell": "#172033", "shellText": "#F2F4F7", "shellMuted": "#BAC4D4",
+      "shellSelected": "#343A68", "shellSelectedText": "#EEF2FF", "shellFocus": "#C7D2FE"
+    },
+    "dark": {
+      "canvas": "#101828", "surface": "#182230", "elevated": "#202D40", "subtle": "#202D40",
+      "text": "#F2F4F7", "textSecondary": "#D0D5DD", "textMuted": "#A8B3C7", "textDisabled": "#667085",
+      "border": "#344054", "controlBorder": "#8291AA", "disabledBg": "#202D40",
+      "primary": "#A5B4FC", "primaryHover": "#C7D2FE", "primaryActive": "#818CF8", "onPrimary": "#101828",
+      "selected": "#30345B", "selectedHover": "#3B4070", "selectedText": "#E0E7FF", "focus": "#A5B4FC",
+      "success": "#75E0A7", "successBg": "#12372A", "successBorder": "#276749",
+      "warning": "#FEC84B", "warningBg": "#3D2D16", "warningBorder": "#7A5A25",
+      "error": "#FDA29B", "errorHover": "#FECDCA", "errorActive": "#F97066", "onError": "#101828",
+      "errorBg": "#402322", "errorBorder": "#8B3A35",
+      "info": "#84CAFF", "infoBg": "#16324B", "infoBorder": "#315C7E",
+      "shell": "#0C1322", "shellText": "#F2F4F7", "shellMuted": "#BAC4D4",
+      "shellSelected": "#30345B", "shellSelectedText": "#E0E7FF", "shellFocus": "#C7D2FE"
+    }
+  },
+  "space": { "xs": 4, "sm": 8, "md": 12, "lg": 16, "xl": 24, "xxl": 32, "section": 40 },
+  "radius": { "small": 4, "control": 6, "surface": 10, "overlay": 12 },
+  "typography": {
+    "fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif",
+    "fontFamilyCode": "'SFMono-Regular', Consolas, 'Liberation Mono', monospace",
+    "fontSize": { "caption": 13, "body": 14, "section": 16, "result": 20, "page": 24, "metric": 28 },
+    "lineHeight": { "caption": 20, "body": 22, "section": 24, "result": 28, "page": 32, "metric": 36 },
+    "weight": { "regular": 400, "medium": 500, "strong": 600 }
+  },
+  "layout": { "nav": 216, "header": 56, "readingMax": 1200, "formMax": 920, "rail": 320, "editorNav": 240, "pageInset": 32, "mobileInset": 16, "touchTarget": 44 },
+  "motion": { "fast": 120, "normal": 180, "slow": 240, "easing": "cubic-bezier(0.2, 0, 0, 1)" },
+  "shadow": { "surface": "none", "overlay": "0 12px 32px rgb(16 24 40 / 16%)" },
+  "density": {
+    "comfortable": { "controlHeight": 36, "controlHeightSM": 32, "controlHeightLG": 44, "cellPaddingBlock": 12, "cellPaddingInline": 16 },
+    "compact": { "controlHeight": 32, "controlHeightSM": 28, "controlHeightLG": 40, "cellPaddingBlock": 8, "cellPaddingInline": 12 }
+  }
+}
